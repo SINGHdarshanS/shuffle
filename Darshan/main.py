@@ -16,4 +16,4 @@ print("Shuffled playlist: {}".format(playlist))
 
 # run optional tests here if gate boolean is set to True during init at start of script
 if gate:  # run testing spectrum here
-    test(5,10)
+    test(20,10)

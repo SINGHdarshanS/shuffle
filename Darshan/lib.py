@@ -32,15 +32,22 @@ def rearrange(target, placements):
 
 def sequencer_rec(original, modified, maxlen):
     ret = {"runs": 1}
+    print(original)
     for i in range(2, maxlen + 1):
         ret[i] = 0
         tester = original[:i]
         start = modified.index(tester[0])
         for p in range(start + 1, start + i + 1):
-            if original[p - start] != modified[p]:
+            print(p)
+            print(list(range(start + 1, start + i + 1)))
+            try:
+                if p == start + i and original[p - start] == modified[p]:
+                    ret[i] = 1
+                    break
+                elif original[p - start] != modified[p]:
+                    break
+            except:
                 break
-            elif p == start + i:
-                ret[i] = 1
     return ret
 
 
@@ -59,4 +66,4 @@ def test(size, passes, repetitions=True, sequences=True, max_sequence_length=3):
                     pass
             if sequences and size - curr_loc >= max_sequence_length:
                 ret = sequencer_rec(tester[curr_loc:], shuffle, max_sequence_length)
-                print(ret)
+                print(ret)  # add cumulation and some data visualization

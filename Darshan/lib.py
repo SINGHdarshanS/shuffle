@@ -30,5 +30,33 @@ def rearrange(target, placements):
     return retlist
 
 
-def test():
-    pass
+def sequencer_rec(original, modified, maxlen):
+    ret = {"runs": 1}
+    for i in range(2, maxlen + 1):
+        ret[i] = 0
+        tester = original[:i]
+        start = modified.index(tester[0])
+        for p in range(start + 1, start + i + 1):
+            if original[p - start] != modified[p]:
+                break
+            elif p == start + i:
+                ret[i] = 1
+    return ret
+
+
+def test(size, passes, repetitions=True, sequences=True, max_sequence_length=3):
+    if max_sequence_length < 2:
+        max_sequence_length = 2
+    for run in range(passes):
+        tester = gen_playlist(size)
+        shuffle = rearrange(tester, gen_placements(size))
+        for entry in tester:
+            curr_loc = tester.index(entry)
+            # print(curr_loc)
+            if repetitions:
+                if entry == shuffle[curr_loc]:
+                    # this should be recorded later
+                    pass
+            if sequences and size - curr_loc >= max_sequence_length:
+                ret = sequencer_rec(tester[curr_loc:], shuffle, max_sequence_length)
+                print(ret)

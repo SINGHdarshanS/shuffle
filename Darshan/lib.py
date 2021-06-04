@@ -1,5 +1,6 @@
 from random import random, seed
 import numpy as np
+import time
 
 
 def init_shuffle(test=False):
@@ -32,38 +33,47 @@ def rearrange(target, placements):
 
 def sequencer_rec(original, modified, maxlen):
     ret = {"runs": 1}
-    print(original)
-    for i in range(2, maxlen + 1):
-        ret[i] = 0
-        tester = original[:i]
-        start = modified.index(tester[0])
-        for p in range(start + 1, start + i + 1):
-            print(p)
-            print(list(range(start + 1, start + i + 1)))
-            try:
-                if p == start + i and original[p - start] == modified[p]:
-                    ret[i] = 1
+    for i in range(len(original) - 1):  # shifts start position by 1 over each loop
+        for j in range(2 + i, maxlen + i + 1):  # widens tester by 1 over each loop
+            if i + 2 <= j:
+                if j - i not in ret.keys():
+                    ret[j - i] = 0
+                tester = original[i:j]
+                if j - i > len(tester):
                     break
-                elif original[p - start] != modified[p]:
-                    break
-            except:
-                break
+                for k in range(len(modified)):  # shifts start position by 1 over each loop
+                    if modified[k:k + len(tester)] == tester:
+                        ret[j - i] += 1
+                        break
+
     return ret
 
 
-def test(size, passes, repetitions=True, sequences=True, max_sequence_length=3):
+def test(size, passes, repetitions=True, max_sequence_length=3):
+    tick_init = time.time_ns()
     if max_sequence_length < 2:
         max_sequence_length = 2
+    if max_sequence_length > size:
+        max_sequence_length = size
+    cum_tests = {'ipr': 0}
     for run in range(passes):
+        tick = time.time_ns()
         tester = gen_playlist(size)
         shuffle = rearrange(tester, gen_placements(size))
+        reps = 0
         for entry in tester:
             curr_loc = tester.index(entry)
-            # print(curr_loc)
             if repetitions:
                 if entry == shuffle[curr_loc]:
-                    # this should be recorded later
-                    pass
-            if sequences and size - curr_loc >= max_sequence_length:
-                ret = sequencer_rec(tester[curr_loc:], shuffle, max_sequence_length)
-                print(ret)  # add cumulation and some data visualization
+                    reps += 1
+        ret = sequencer_rec(tester, shuffle, max_sequence_length)
+        for key in ret.keys():
+            if key not in cum_tests.keys():
+                cum_tests[key] = ret[key]
+            else:
+                cum_tests[key] += ret[key]
+        cum_tests['ipr'] += reps
+
+        print("run completed in {} seconds".format((time.time_ns() - tick) / 1000000000))
+    print("ALL TESTING COMPLETED IN {} SECONDS.".format((time.time_ns() - tick_init) / 1000000000))
+    return cum_tests

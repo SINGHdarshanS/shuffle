@@ -1,4 +1,4 @@
-from lib import *
+from shuffle import *
 
 gate = init_shuffle(test=True)
 
@@ -16,5 +16,14 @@ gate = init_shuffle(test=True)
 
 # run optional tests here if gate boolean is set to True during init at start of script
 if gate:  # run testing spectrum here
-    ret = test(100, 100, max_sequence_length=5)
-    print(ret)
+    sum = 0
+    for i in range(2, 200):
+        ret = test(i, 50, max_sequence_length=4)
+        print("There were a total of {} in-place repetitions over {} test runs. (Avg {} IPRs per run)".format(ret['ipr'], ret['runs'], ret['ipr'] / ret['runs']))
+        sum += ret['ipr']
+    print(sum)
+
+
+    # ret = test(102, 50, max_sequence_length=3)
+    # # print(ret)
+    # print("There were a total of {} in-place repetitions over {} test runs. (Avg {} IPRs per run)".format(ret['ipr'], ret['runs'], ret['ipr'] / ret['runs']))

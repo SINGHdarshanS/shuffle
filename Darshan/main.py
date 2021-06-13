@@ -1,4 +1,5 @@
 from shuffle import *
+import matplotlib.pyplot as plt
 
 gate = init_shuffle(test=True)
 
@@ -16,12 +17,19 @@ gate = init_shuffle(test=True)
 
 # run optional tests here if gate boolean is set to True during init at start of script
 if gate:  # run testing spectrum here
-    sum = 0
-    for i in range(2, 200):
-        ret = test(i, 50, max_sequence_length=4)
+    summy = 0
+    lenny = 1001
+    seq = np.zeros(lenny)
+    for i in range(2, lenny):
+        ret = test(i, 100, max_sequence_length=2)
         print("There were a total of {} in-place repetitions over {} test runs. (Avg {} IPRs per run)".format(ret['ipr'], ret['runs'], ret['ipr'] / ret['runs']))
-        sum += ret['ipr']
-    print(sum)
+        print(ret)
+        summy += ret['ipr']
+        seq[i] = ret[2]
+    print(summy)
+    print(seq)
+    plt.plot(list(range(1, len(seq)+1)), seq)
+    plt.show()
 
 
     # ret = test(102, 50, max_sequence_length=3)

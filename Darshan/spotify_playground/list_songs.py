@@ -1,17 +1,6 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 
-def list_lists(inn):
-    while inn.lstrip().rstrip().lower() == 'list':
-        print('###############################\nPlaylist list:')
-        for index, result in enumerate(lists):
-            print(index + 1, result)
-        inn = input(
-            '###############################\nIf you would like to see the list repeated, please type \'list\', '
-            'otherwise type in the name of the playlist that you would like to view songs from.\n')
-    return inn
-
-
 scope = 'playlist-read-private'
 
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
@@ -26,7 +15,13 @@ inn = input('Please input the name of the playlist that you would like to view s
             'which playlists are available, please type \'list\'.\n')
 while inn.lstrip().rstrip().lower() != 'done':
     if inn.lstrip().rstrip().lower() == 'list':
-        inn = list_lists(inn)
+        while inn.lstrip().rstrip().lower() == 'list':
+            print('###############################\nPlaylist list:')
+            for index, result in enumerate(lists):
+                print(index + 1, result)
+            inn = input(
+                '###############################\nIf you would like to see the list repeated, please type \'list\', '
+                'otherwise type in the name of the playlist that you would like to view songs from.\n')
     elif inn in lists:
         items = sp.playlist_items(id_map[inn], limit=10, market='US')
         for index, item in enumerate(items['items']):

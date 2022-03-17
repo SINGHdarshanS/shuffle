@@ -1,2 +1,2 @@
 # shuffle
-coding a better shuffle algorithm when a fully random shuffle isn't quite cutting it for you
+coding a "more random" shuffle algorithm when a stochastically random shuffle isn't quite cutting it for you
